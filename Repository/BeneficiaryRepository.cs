@@ -29,14 +29,14 @@ namespace AccountsApi.Repository
                     {
                         throw new ArgumentException("Beneficiary name is required.", nameof(beneficiaryInput.BenefName));
                     }
-                    if (beneficiaryInput.BenefAccount.ToString().Length != 13 || !beneficiaryInput.BenefAccount.ToString().All(char.IsDigit))
+                   /* if (beneficiaryInput.BenefAccount.ToString().Length>0 || !beneficiaryInput.BenefAccount.ToString().All(char.IsDigit))
                     {
                         throw new ArgumentException("Beneficiary account number must be a 13-digit number.", nameof(beneficiaryInput.BenefAccount));
                     }
-                    if (beneficiaryInput.AccountId.ToString().Length != 13 || !beneficiaryInput.AccountId.ToString().All(char.IsDigit))
+                    if (beneficiaryInput.AccountId.ToString().Length >0 || !beneficiaryInput.AccountId.ToString().All(char.IsDigit))
                     {
                         throw new ArgumentException("Account ID must be a 13-digit number.", nameof(beneficiaryInput.AccountId));
-                    }
+                    }*/
                     // Check if BenefAccount exists in the Accounts table
                     var accountExists = await _context.Accounts.AnyAsync(a => a.AccountId == beneficiaryInput.BenefAccount);
                     if (!accountExists)
@@ -50,8 +50,6 @@ namespace AccountsApi.Repository
                     {
                         throw new ArgumentException("Main account does not exist in Accounts.", nameof(beneficiaryInput.AccountId));
                     }
-
-
 
                     var beneficiary = new Beneficiary
                     {
@@ -77,11 +75,11 @@ namespace AccountsApi.Repository
 
     
 
-        public async Task<bool> DeleteBenficiary(long beneficiaryId)
+        public async Task<bool> DeleteBenficiary(long accountId,long beneficiaryId)
             {
                 try
                 {
-                    var beneficiary = await _context.Beneficiaries.FirstOrDefaultAsync(b => b.BenefAccount == beneficiaryId && b.IsActive == true);
+                    var beneficiary = await _context.Beneficiaries.FirstOrDefaultAsync(b => b.BenefAccount == beneficiaryId && b.AccountId==accountId && b.IsActive == true);
                     if (beneficiary == null)
                     {
                         return false;

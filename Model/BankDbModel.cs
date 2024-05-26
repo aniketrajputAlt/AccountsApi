@@ -246,6 +246,13 @@ namespace AccountsApi.Model
         public bool IsActive { get; set; }
 
     }
+    public class AccountInputModel
+    {
+        public decimal Balance { get; set; }
+        public int CustomerID { get; set; }
+        public int TypeID { get; set; }
+        public string BranchID { get; set; }
+    }
 
 
     public class BeneficiaryInputModel

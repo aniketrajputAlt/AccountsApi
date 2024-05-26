@@ -8,6 +8,6 @@ namespace AccountsApi.Repository
 
        public Task<IEnumerable<Beneficiary>> ListBeneficiary(long accoundId);
 
-       public Task<bool>DeleteBenficiary(long beneficiaryId);
+       public Task<bool>DeleteBenficiary(long accountId,long beneficiaryId);
     }
 }
