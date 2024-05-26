@@ -26,6 +26,23 @@ namespace AccountsApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Beneficiaries",
+                columns: table => new
+                {
+                    BenefID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BenefName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BenefAccount = table.Column<long>(type: "bigint", nullable: false),
+                    BenefIFSC = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccountId = table.Column<long>(type: "bigint", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Beneficiaries", x => x.BenefID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Branches",
                 columns: table => new
                 {
@@ -200,29 +217,6 @@ namespace AccountsApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Beneficiaries",
-                columns: table => new
-                {
-                    BenefID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BenefName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BenefAccount = table.Column<long>(type: "bigint", nullable: false),
-                    BenefIFSC = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountId = table.Column<long>(type: "bigint", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Beneficiaries", x => x.BenefID);
-                    table.ForeignKey(
-                        name: "FK_Beneficiaries_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "AccountId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_BranchID",
                 table: "Accounts",
@@ -237,11 +231,6 @@ namespace AccountsApi.Migrations
                 name: "IX_Accounts_TypeID",
                 table: "Accounts",
                 column: "TypeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Beneficiaries_AccountId",
-                table: "Beneficiaries",
-                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_UserId",
@@ -280,6 +269,9 @@ namespace AccountsApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Accounts");
+
+            migrationBuilder.DropTable(
                 name: "Beneficiaries");
 
             migrationBuilder.DropTable(
@@ -289,12 +281,6 @@ namespace AccountsApi.Migrations
                 name: "Transactions");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
-                name: "DocTypes");
-
-            migrationBuilder.DropTable(
                 name: "AccountTypes");
 
             migrationBuilder.DropTable(
@@ -302,6 +288,9 @@ namespace AccountsApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "DocTypes");
 
             migrationBuilder.DropTable(
                 name: "Users");

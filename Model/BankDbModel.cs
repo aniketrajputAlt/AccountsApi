@@ -37,12 +37,12 @@ namespace AccountsApi.Model
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
 
-        public virtual Customer Customer { get; set; }
+       // public virtual Customer Customer { get; set; }
 
         [ForeignKey("DocType")]
         public int DocTypeId { get; set; }
 
-        public virtual DocType DocType { get; set; }
+        //public virtual DocType DocType { get; set; }
 
         public bool IsActive { get; set; }
     }
@@ -113,7 +113,7 @@ namespace AccountsApi.Model
         [ForeignKey("User")]
         public int UserId { get; set; }
 
-        public virtual User User { get; set; }
+      //  public virtual User User { get; set; }
     }
 
     [Table("Users")]
@@ -141,7 +141,7 @@ namespace AccountsApi.Model
         [ForeignKey("Role")]
         public int RoleId { get; set; }
 
-        public virtual Role Role { get; set; }
+      //  public virtual Role Role { get; set; }
     }
 
     [Table("Accounts")]
@@ -237,29 +237,34 @@ namespace AccountsApi.Model
         [Required]
         public string BenefIFSC { get; set; }
 
-       
+
         [Required]
         public long AccountId { get; set; }
-       
+
         [Required]
         [DefaultValue(true)]
         public bool IsActive { get; set; }
 
-    
+    }
 
 
+    public class BeneficiaryInputModel
+    {
+        [Required]
+        public string BenefName { get; set; }
 
-        [ForeignKey("AccountId")]
-        public Account Account { get; set; }
+        [Required]
+        public long BenefAccount { get; set; }
 
+        [Required]
+        public string BenefIFSC { get; set; }
 
+        [Required]
+        public long AccountId { get; set; }
 
-      
-
-/*        [ForeignKey("Dest_Acc")]
-        public  Account Account { get; set; }*/
-
-
+        [Required]
+        [DefaultValue(true)]
+        public bool IsActive { get; set; }
     }
     [Table("Transactions")]
     [PrimaryKey("TransactionID")]
@@ -290,7 +295,7 @@ namespace AccountsApi.Model
 
              public DbSet<Transaction> Transactions {  get; set; }
            public DbSet<Beneficiary> Beneficiaries {  get; set; }
-          
+   
         public DbSet<User> Users {  get; set; }
 
         public DbSet<DocType> DocTypes { get; set; }

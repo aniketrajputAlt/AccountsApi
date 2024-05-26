@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsApi.Migrations
 {
     [DbContext(typeof(BankingAppDbContext))]
-    [Migration("20240526063048_BankDbInitialMigration")]
+    [Migration("20240526141035_BankDbInitialMigration")]
     partial class BankDbInitialMigration
     {
         /// <inheritdoc />
@@ -114,8 +114,6 @@ namespace AccountsApi.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("BenefID");
-
-                    b.HasIndex("AccountId");
 
                     b.ToTable("Beneficiaries");
                 });
@@ -371,17 +369,6 @@ namespace AccountsApi.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("AccountsApi.Model.Beneficiary", b =>
-                {
-                    b.HasOne("AccountsApi.Model.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("AccountsApi.Model.Customer", b =>

@@ -112,8 +112,6 @@ namespace AccountsApi.Migrations
 
                     b.HasKey("BenefID");
 
-                    b.HasIndex("AccountId");
-
                     b.ToTable("Beneficiaries");
                 });
 
@@ -368,17 +366,6 @@ namespace AccountsApi.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("AccountsApi.Model.Beneficiary", b =>
-                {
-                    b.HasOne("AccountsApi.Model.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("AccountsApi.Model.Customer", b =>

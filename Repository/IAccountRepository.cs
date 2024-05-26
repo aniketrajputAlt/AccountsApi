@@ -9,6 +9,6 @@ namespace AccountsApi.Repository
 
         public Task<bool>DeleteAccount(long accountId);
 
-
+        public Task<List<Account>> GetAccountsByCustomerId(int customerId);
     }
 }

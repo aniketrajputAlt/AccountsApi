@@ -16,6 +16,10 @@ namespace AccountsApi
 
             // Add services to the container.
             builder.Services.AddScoped<ITransactionRepository,TransactionRepository>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+            builder.Services.AddScoped<IBeneficiaryRepository, BeneficiaryRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -29,7 +33,11 @@ namespace AccountsApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors(policy =>
+   policy.AllowAnyOrigin()
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+);
             app.UseAuthorization();
 
 
