@@ -148,9 +148,9 @@ namespace AccountsApi.Model
         [PrimaryKey("AccountId")]
         public class Account
         {
-            [Key]
-            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-            public long AccountId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long AccountId { get; set; } = 10000000;
             
             [Required]
             public decimal Balance { get; set; }
