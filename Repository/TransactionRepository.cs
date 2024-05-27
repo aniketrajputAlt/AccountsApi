@@ -15,6 +15,8 @@ namespace AccountsApi.Repository
             _context = context;
         }
 
+      
+
         public async Task<bool> FundTransfer(long sourceAccountId, long destinationAccountId, decimal amount)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
@@ -33,13 +35,19 @@ namespace AccountsApi.Repository
 
                     // Check if the source account has sufficient balance
                     if (sourceAccount.TypeID==1 &&  sourceAccount.Balance-amount<1000)
-                        throw new Exception("Insufficient balance in source account.");
+                        throw new Exception("Insufficient balance in Savings account.");
                     if (sourceAccount.TypeID == 2 && sourceAccount.Balance - amount < 5000)
-                        throw new Exception("Insufficient balance in source account.");
+                        throw new Exception("Insufficient balance in Current account.");
 
                     // Check if source and destination accounts are the same
                     if (sourceAccountId == destinationAccountId)
                         throw new Exception("Source account same as Destination account.");
+
+                    if(amount==0)
+                        throw new Exception("Amount must be greater than zero.");
+
+                    if (amount < 0)
+                        throw new Exception("Amount must be greater than zero.");
 
                     // Calculate charges for Source account
                     decimal sourceWdCharges = CalculateCharges(sourceAccount.TypeID, sourceAccount.wd_Quota, amount, true);
@@ -60,8 +68,7 @@ namespace AccountsApi.Repository
                     if (destinationAccount.dp_Quota > 0)
                         destinationAccount.dp_Quota -= 1;
 
-                    // Update bank's account based on the charges
-                 //   UpdateBankAccountBalance(sourceAccount.TypeID, destinationAccount.TypeID, sourceWdCharges, destinationDpCharges);
+
 
                     // Log the transaction
                     var transactionLog = new Transaction
@@ -83,6 +90,7 @@ namespace AccountsApi.Repository
                 {
                     await transaction.RollbackAsync();
                     // Log the exception
+                    throw new Exception(ex.Message);
                     return false;
                 }
             }

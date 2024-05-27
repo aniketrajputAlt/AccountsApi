@@ -13,10 +13,13 @@ namespace AccountsApi.Repository
 
         public async Task<bool> CreateAccount(AccountInputModel input)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var useTransaction = _context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory";
+
+            using (var transaction = useTransaction ? await _context.Database.BeginTransactionAsync() : null)
             {
                 try
                 {
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Accounts ON");
                     // Check if the customer, account type, and branch exist
                     var customerExists = await _context.Customers.AnyAsync(c => c.CustomerId == input.CustomerID);
                     var accountTypeExists = await _context.AccountTypes.AnyAsync(a => a.TypeID == input.TypeID);
@@ -36,7 +39,6 @@ namespace AccountsApi.Repository
                     {
                         throw new Exception("Branch with the provided ID does not exist.");
                     }
-
 
                     // Set withdrawal and deposit quotas based on account type
                     int wdQuota = 0;
@@ -67,6 +69,7 @@ namespace AccountsApi.Repository
                         Balance = input.Balance,
                         wd_Quota = wdQuota,
                         dp_Quota = dpQuota,
+                       
                         isActive = true,
                         CustomerID = input.CustomerID,
                         TypeID = input.TypeID,
@@ -76,30 +79,42 @@ namespace AccountsApi.Repository
                     _context.Accounts.Add(account);
                     await _context.SaveChangesAsync();
 
-                    await transaction.CommitAsync(); // Commit the transaction
+                    if (useTransaction)
+                    {
+                        await transaction.CommitAsync(); // Commit the transaction
+                    }
 
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
+                    if (useTransaction)
+                    {
+                        await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
+                    }
                     throw new Exception(ex.Message); // Throw the caught exception to bubble it up
                 }
             }
         }
 
-
         public async Task<Account> GetAccountById(long id)
         {
             try
             {
-                var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == id && a.isActive==true);
-
+                var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == id);
                 if (account == null)
                 {
                     // If the account is not found, return null
                     throw new Exception("Account with the provided ID does not exist.");
                 }
+                if (account.isActive == false)
+                {
+                    // If the account is not found, return null
+                    throw new Exception("Account was deleted by the user");
+                }
+
+
+
 
                 return account;
             }
@@ -110,10 +125,11 @@ namespace AccountsApi.Repository
             }
         }
 
-
         public async Task<bool> DeleteAccount(long id)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var useTransaction = _context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory";
+
+            using (var transaction = useTransaction ? await _context.Database.BeginTransactionAsync() : null)
             {
                 try
                 {
@@ -122,6 +138,11 @@ namespace AccountsApi.Repository
                     {
                         throw new Exception("Account with the provided ID does not exist.");
                     }
+                    if (account.isActive == false)
+                    {
+                        throw new Exception("Account was already deleted by the user");
+                    }
+
 
                     // Set isActive to false
                     account.isActive = false;
@@ -132,17 +153,24 @@ namespace AccountsApi.Repository
                     // Save the changes
                     await _context.SaveChangesAsync();
 
-                    await transaction.CommitAsync(); // Commit the transaction
+                    if (useTransaction)
+                    {
+                        await transaction.CommitAsync(); // Commit the transaction
+                    }
 
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
+                    if (useTransaction)
+                    {
+                        await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
+                    }
                     throw new Exception(ex.Message); // Throw the caught exception to bubble it up
                 }
             }
         }
+
         public async Task<List<Account>> GetAccountsByCustomerId(int customerId)
         {
             return await _context.Accounts

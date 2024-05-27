@@ -150,7 +150,7 @@ namespace AccountsApi.Model
         {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long AccountId { get; set; } = 10000000;
+        public long AccountId { get; set; }
             
             [Required]
             public decimal Balance { get; set; }
@@ -180,8 +180,8 @@ namespace AccountsApi.Model
             [ForeignKey("BranchID")]
             public Branch Branch { get; set; }
 
-            [ForeignKey("TypeID")]
-            public AccountType AccountType { get; set; }
+           /* [ForeignKey("TypeID")]
+            public AccountType AccountType { get; set; }*/
 
 
         }
@@ -319,11 +319,13 @@ namespace AccountsApi.Model
         }
 
 
-        /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-         {
-             optionsBuilder.UseSqlServer
-                 (@"Server=(local)\MSSQLSERVERNEW;database=NewBankingApp;integrated security=sspi;trustservercertificate=true;multipleactiveresultsets=true");
-         }*/
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Account>()
+                .Property(a => a.AccountId)
+                .UseIdentityColumn(); // or .ValueGeneratedOnAdd() depending on EF version
+                                      // Other configurations
+        }
 
     }
 
