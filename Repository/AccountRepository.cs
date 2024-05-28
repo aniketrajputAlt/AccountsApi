@@ -1,12 +1,9 @@
 ﻿using AccountsApi.Model;
 using Microsoft.EntityFrameworkCore;
-<<<<<<< HEAD
-using System.ComponentModel.DataAnnotations;
-=======
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
->>>>>>> 0c206703208c6aa0c130c99be821d248883c7731
 
 namespace AccountsApi.Repository
 {
@@ -27,11 +24,7 @@ namespace AccountsApi.Repository
             {
                 try
                 {
-<<<<<<< HEAD
-                   
 
-=======
->>>>>>> 0c206703208c6aa0c130c99be821d248883c7731
                     // Check if the customer, account type, and branch exist
                     var customerExists = await _context.Customers.AnyAsync(c => c.CustomerId == input.CustomerID);
                     var accountTypeExists = await _context.AccountTypes.AnyAsync(a => a.TypeID == input.TypeID);
@@ -87,10 +80,10 @@ namespace AccountsApi.Repository
                         BranchID = input.BranchID
                     };
 
-                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Accounts ON");
+                 
                     _context.Accounts.Add(account);
                     await _context.SaveChangesAsync();
-                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Accounts OFF");
+               
 
                     if (useTransaction)
                     {
@@ -113,11 +106,9 @@ namespace AccountsApi.Repository
                     {
                         await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
                     }
-<<<<<<< HEAD
-                    throw new Exception(ex.InnerException?.Message ?? ex.Message); // Throw the caught exception to bubble it up
-=======
+
                     throw new Exception("Exception: " + ex.InnerException?.Message ?? ex.Message); // Throw the caught exception to bubble it up
->>>>>>> 0c206703208c6aa0c130c99be821d248883c7731
+
                 }
             }
         }
