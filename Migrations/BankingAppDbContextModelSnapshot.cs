@@ -202,8 +202,6 @@ namespace AccountsApi.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Customers");
                 });
 
@@ -250,10 +248,6 @@ namespace AccountsApi.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("DocId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("DocTypeId");
 
                     b.ToTable("Documents");
                 });
@@ -333,8 +327,6 @@ namespace AccountsApi.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("RoleId");
-
                     b.HasIndex(new[] { "Username" }, "IDX_User_Names")
                         .IsUnique();
 
@@ -366,47 +358,6 @@ namespace AccountsApi.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("AccountsApi.Model.Customer", b =>
-                {
-                    b.HasOne("AccountsApi.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AccountsApi.Model.Document", b =>
-                {
-                    b.HasOne("AccountsApi.Model.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AccountsApi.Model.DocType", "DocType")
-                        .WithMany()
-                        .HasForeignKey("DocTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("DocType");
-                });
-
-            modelBuilder.Entity("AccountsApi.Model.User", b =>
-                {
-                    b.HasOne("AccountsApi.Model.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }

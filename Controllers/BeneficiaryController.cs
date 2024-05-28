@@ -55,12 +55,12 @@ namespace AccountsApi.Controllers
             }
         }
 
-        [HttpDelete("delete/{accid}/{benefid}")]
-        public async Task<IActionResult> DeleteBeneficiary(long accid,long benefid)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBeneficiary(long id)
         {
             try
             {
-                var result = await _beneficiaryRepository.DeleteBenficiary(accid,benefid);
+                var result = await _beneficiaryRepository.DeleteBenficiary(id);
                 if (!result)
                 {
                     return NotFound();

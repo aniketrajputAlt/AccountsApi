@@ -180,11 +180,11 @@ namespace AccountsApi.Model
             [ForeignKey("BranchID")]
             public Branch Branch { get; set; }
 
-           /* [ForeignKey("TypeID")]
-            public AccountType AccountType { get; set; }*/
+        [ForeignKey("TypeID")]
+        public AccountType AccountType { get; set; }
 
 
-        }
+    }
 
     [Table("Branches")]
     [PrimaryKey("BranchID")]
