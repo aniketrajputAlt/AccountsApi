@@ -1,11 +1,15 @@
 ﻿using AccountsApi.Model;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccountsApi.Repository
 {
     public class AccountRepository : IAccountRepository
     {
         private readonly BankingAppDbContext _context;
+
         public AccountRepository(BankingAppDbContext context)
         {
             _context = context;
@@ -19,7 +23,6 @@ namespace AccountsApi.Repository
             {
                 try
                 {
-                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Accounts ON");
                     // Check if the customer, account type, and branch exist
                     var customerExists = await _context.Customers.AnyAsync(c => c.CustomerId == input.CustomerID);
                     var accountTypeExists = await _context.AccountTypes.AnyAsync(a => a.TypeID == input.TypeID);
@@ -69,7 +72,6 @@ namespace AccountsApi.Repository
                         Balance = input.Balance,
                         wd_Quota = wdQuota,
                         dp_Quota = dpQuota,
-                       
                         isActive = true,
                         CustomerID = input.CustomerID,
                         TypeID = input.TypeID,
@@ -86,17 +88,24 @@ namespace AccountsApi.Repository
 
                     return true;
                 }
+                catch (DbUpdateException dbEx)
+                {
+                    if (useTransaction)
+                    {
+                        await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
+                    }
+                    throw new Exception("Database update exception: " + dbEx.InnerException?.Message ?? dbEx.Message);
+                }
                 catch (Exception ex)
                 {
                     if (useTransaction)
                     {
                         await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
                     }
-                    throw new Exception(ex.Message); // Throw the caught exception to bubble it up
+                    throw new Exception("Exception: " + ex.InnerException?.Message ?? ex.Message); // Throw the caught exception to bubble it up
                 }
             }
         }
-
         public async Task<Account> GetAccountById(long id)
         {
             try
