@@ -18,6 +18,8 @@ namespace AccountsApi.Controllers
         }
 
         [HttpGet("GetActiveCustomer/{id}")]
+        //[Authorize(Policy = "CustomerDataAccess")]
+
         public async Task<IActionResult> GetActiveCustomer(int id)
         {
             try
@@ -36,24 +38,6 @@ namespace AccountsApi.Controllers
             }
         }
 
-        [HttpPost("deactivate/{id}")]
-        public async Task<IActionResult> DeactivateCustomer(int id)
-        {
-            try
-            {
-                var success = await _customerRepository.DeactivateCustomerAsync(id);
-                if (!success)
-                {
-                    return NotFound(new { message = "Customer not found or already inactive." });
-                }
-                return Ok(new { message = "Customer deactivated successfully." });
-            }
-            catch (Exception ex)
-            {
-                // Log the exception details here if necessary
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error deactivating customer", error = ex.Message });
-            }
-        }
 
         [HttpPut("updateCustomer/{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, [FromBody] Customer customer)
@@ -82,29 +66,19 @@ namespace AccountsApi.Controllers
         [HttpPost("CreateCustomer")]
         public async Task<IActionResult> CreateCustomer([FromBody] Customer customer)
         {
-            try
+            if (customer == null)
             {
-                var createdCustomer = await _customerRepository.CreateCustomerAsync(customer);
-                return CreatedAtAction(nameof(GetActiveCustomer), new { id = createdCustomer.CustomerId }, createdCustomer);
+                return BadRequest(new { message = "Customer data cannot be null." });
             }
-            catch (DbUpdateException ex)
+
+            var createdCustomer = await _customerRepository.CreateCustomerAsync(customer);
+            if (createdCustomer == null)
             {
-                // Log the exception details here if necessary
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    message = "Error creating customer",
-                    error = ex.InnerException?.Message ?? ex.Message
-                });
+                return BadRequest(new { message = "Invalid customer data. Please check the provided information." });
             }
-            catch (Exception ex)
-            {
-                // Log the exception details here if necessary
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    message = "Error creating customer",
-                    error = ex.Message
-                });
-            }
+
+            return CreatedAtAction(nameof(GetActiveCustomer), new { id = createdCustomer.CustomerId }, createdCustomer);
         }
+
     }
 }

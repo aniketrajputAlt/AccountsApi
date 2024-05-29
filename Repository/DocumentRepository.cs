@@ -25,18 +25,18 @@ namespace AccountsApi.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateDocumentAsync(int docId, byte[] document, int docType)
-        {
-            var existingDocument = await _context.Documents.FindAsync(docId);
-            if (existingDocument != null)
-            {
-                existingDocument.Documents = document;
-                existingDocument.DocTypeId = docType;
-                existingDocument.IsActive = true; // Ensure the document is marked as active
-                await _context.SaveChangesAsync();
-            }
-        }
-
+        /*  public async Task UpdateDocumentAsync(int docId, byte[] document, int docType)
+          {
+              var existingDocument = await _context.Documents.FindAsync(docId);
+              if (existingDocument != null)
+              {
+                  existingDocument.Documents = document;
+                  existingDocument.DocTypeId = docType;
+                  existingDocument.IsActive = true; // Ensure the document is marked as active
+                  await _context.SaveChangesAsync();
+              }
+          }
+  */
         public async Task<IEnumerable<Document>> GetDocumentsByCustomerIdAsync(int customerId)
         {
 
@@ -49,13 +49,13 @@ namespace AccountsApi.Repository
 
 
 
-
+/*
         public async Task<int?> GetDocumentIdByCustomerAndTypeAsync(int customerId, int docType)
         {
             var document = await _context.Documents
                 .FirstOrDefaultAsync(d => d.CustomerId == customerId && d.DocTypeId == docType && d.IsActive);
             return document?.DocId;
-        }
+        }*/
 
        
     }
