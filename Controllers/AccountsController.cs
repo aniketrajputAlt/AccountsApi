@@ -1,5 +1,6 @@
 ﻿using AccountsApi.Model;
 using AccountsApi.Repository;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Contracts;
@@ -8,6 +9,7 @@ namespace AccountsApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountRepository _accountRepository;
@@ -18,19 +20,14 @@ namespace AccountsApi.Controllers
         [HttpGet("Customer/{id}")]
         public async Task<IActionResult> GetAccountsByCustomerId(int id)
         {
-            try
-            {
+           
                 var account = await _accountRepository.GetAccountsByCustomerId(id);
                 if (account == null)
                 {
                     return NotFound(new { message = "Accounts not found." });
                 }
                 return Ok(account);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error retrieving account data corresponding to the customer Id", error = ex.Message });
-            }
+           
         }
         // POST: api/Accounts
         [HttpPost]
@@ -40,10 +37,7 @@ namespace AccountsApi.Controllers
             {
                 return BadRequest("Invalid parameters");
             }
-
-            try
-            {
-                var result = await _accountRepository.CreateAccount(input);
+               var result = await _accountRepository.CreateAccount(input);
                 if (result)
                 {
                     return Ok("Account created successfully.");
@@ -52,11 +46,7 @@ namespace AccountsApi.Controllers
                 {
                     return StatusCode(500, "Failed to create account.");
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message); // Return 400 status code with the error message
-            }
+           
         }
 
 

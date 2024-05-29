@@ -28,11 +28,7 @@ namespace AccountsApi.Controllers
                 // Log the exception or handle it appropriately
                 return BadRequest(ex.Message); // Return error message to client
             }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it appropriately
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error occurred while retrieving beneficiaries");
-            }
+           
         }
 
         [HttpPost]
@@ -48,11 +44,11 @@ namespace AccountsApi.Controllers
                 // Log the exception or handle it appropriately
                 return BadRequest(ex.Message); // Return error message to client
             }
-            catch (Exception ex)
+          /*  catch (Exception ex)
             {
                 // Log the exception or handle it appropriately
                 return BadRequest(ex.Message);
-            }
+            }*/
         }
 
         [HttpDelete("{id}")]
@@ -61,10 +57,10 @@ namespace AccountsApi.Controllers
             try
             {
                 var result = await _beneficiaryRepository.DeleteBenficiary(id);
-                if (!result)
+              /*  if (!result)
                 {
                     return NotFound();
-                }
+                }*/
 
                 return NoContent();
             }

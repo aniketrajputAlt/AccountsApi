@@ -20,8 +20,6 @@ namespace AccountsApi.Controllers
         [EnableCors]
         public async Task<IActionResult> GetCustomerDocuments(int id)
         {
-            try
-            {
                 var documents = await _documentsRepository.GetDocumentsByCustomerIdAsync(id);
                 if (documents == null || !documents.Any())
                 {
@@ -38,14 +36,9 @@ namespace AccountsApi.Controllers
                 });
 
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception details here if necessary
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error retrieving customer documents", error = ex.Message });
-            }
+         
         }
-
+/*
         [HttpPost("upload")]
         public async Task<IActionResult> UploadDocument(int customerId, IFormFile file, int docType)
         {
@@ -68,14 +61,15 @@ namespace AccountsApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error uploading document", error = ex.Message });
             }
         }
+*/
 
-        private byte[] ConvertToBytes(IFormFile file)
+     /*   private byte[] ConvertToBytes(IFormFile file)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 file.CopyTo(memoryStream);
                 return memoryStream.ToArray();
             }
-        }
+        }*/
     }
 }

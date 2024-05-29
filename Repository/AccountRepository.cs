@@ -58,10 +58,7 @@ namespace AccountsApi.Repository
                         wdQuota = int.MaxValue; // Unlimited
                         dpQuota = 30;
                     }
-                    else
-                    {
-                        throw new Exception("Invalid account type.");
-                    }
+                  
 
                     // Check if the account balance meets the requirements based on account type
                     if ((input.TypeID == 1 && input.Balance < 1000) || (input.TypeID == 2 && input.Balance < 5000))
@@ -92,14 +89,7 @@ namespace AccountsApi.Repository
 
                     return true;
                 }
-                catch (DbUpdateException dbEx)
-                {
-                    if (useTransaction)
-                    {
-                        await transaction.RollbackAsync(); // Rollback the transaction if an exception occurs
-                    }
-                    throw new Exception("Database update exception: " + dbEx.InnerException?.Message ?? dbEx.Message);
-                }
+               
                 catch (Exception ex)
                 {
                     if (useTransaction)

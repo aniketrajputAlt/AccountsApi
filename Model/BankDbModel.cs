@@ -143,6 +143,11 @@ namespace AccountsApi.Model
 
       //  public virtual Role Role { get; set; }
     }
+    public class PasswordChangeModel
+    {
+        public string Username { get; set; }
+        public string NewPassword { get; set; }
+    }
 
     [Table("Accounts")]
         [PrimaryKey("AccountId")]

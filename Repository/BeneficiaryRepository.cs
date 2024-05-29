@@ -26,10 +26,10 @@ namespace AccountsApi.Repository
                 {
                     throw new ArgumentException("Beneficiary name is required.", nameof(beneficiaryInput.BenefName));
                 }
-                if (string.IsNullOrWhiteSpace(beneficiaryInput.BenefName))
+              /*  if (string.IsNullOrWhiteSpace(beneficiaryInput.BenefName))
                 {
                     throw new ArgumentException("Beneficiary name is required.", nameof(beneficiaryInput.BenefName));
-                }
+                }*/
                 // Check if BenefAccount exists in the Accounts table
                 var accountExists = await _context.Accounts.AnyAsync(a => a.AccountId == beneficiaryInput.BenefAccount);
                 if (!accountExists)
@@ -62,10 +62,10 @@ namespace AccountsApi.Repository
             {
                 throw new ArgumentException(ex.Message);
             }
-            catch (Exception ex)
+           /* catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            }*/
         }
 
         public async Task<bool> DeleteBenficiary(long beneficiaryId)
@@ -94,10 +94,10 @@ namespace AccountsApi.Repository
             {
                 throw new KeyNotFoundException(ex.Message);
             }
-            catch (DbUpdateException ex)
+         /*   catch (DbUpdateException ex)
             {
                 throw new Exception("Database update failed while deleting beneficiary.", ex);
-            }
+            }*/
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -147,11 +147,11 @@ namespace AccountsApi.Repository
             {
                 throw new InvalidOperationException(ex.Message);
             }
-            catch (Exception ex)
+           /* catch (Exception ex)
             {
                 // Log the exception or handle it appropriately 
                 throw new Exception("Error occurred while listing beneficiaries", ex);
-            }
+            }*/
         }
 
 

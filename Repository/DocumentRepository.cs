@@ -12,7 +12,7 @@ namespace AccountsApi.Repository
             _context = context;
         }
 
-        public async Task InsertDocumentAsync(int customerId, byte[] document, int docType)
+      /*  public async Task InsertDocumentAsync(int customerId, byte[] document, int docType)
         {
             var newDocument = new Document
             {
@@ -24,7 +24,7 @@ namespace AccountsApi.Repository
             _context.Documents.Add(newDocument);
             await _context.SaveChangesAsync();
         }
-
+*/
         /*  public async Task UpdateDocumentAsync(int docId, byte[] document, int docType)
           {
               var existingDocument = await _context.Documents.FindAsync(docId);
